@@ -9,19 +9,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.galeev.operator_chat.databinding.ItemContainerReceivedMessageBinding;
 import com.galeev.operator_chat.databinding.ItemContainerSendMessageBinding;
-import com.galeev.operator_chat.models.Bot;
 import com.galeev.operator_chat.models.ChatMessage;
 
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public final List<ChatMessage> chatMessages;
-    private Bitmap receiverProfileImage;
+    private final Bitmap receiverProfileImage;
     public static final int VIEW_TYPE_SEND = 1;
     public static final int VIEW_TYPE_RECEIVED = 2;
-    public void setReceiverProfileImage(Bitmap bitmap){
-        receiverProfileImage = bitmap;
-    }
     public ChatAdapter(List<ChatMessage> chatMessages, Bitmap receiverProfileImage, String senderId) {
         this.chatMessages = chatMessages;
         this.receiverProfileImage = receiverProfileImage;
@@ -76,19 +72,27 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemContainerSendMessageBinding.getRoot());
             binding = itemContainerSendMessageBinding;
         }
+
         void setData(ChatMessage chatMessage) {
-            // Сохраняем оригинальное сообщение
-            String originalMessage = chatMessage.message;
-
-            // Получаем ответ бота
-            Bot bot = new Bot();
-            String botResponse = bot.generateResponse(originalMessage);
-
-            // Устанавливаем оригинальное сообщение и ответ бота
-            binding.textMessage.setText(originalMessage + "\n" + botResponse);
+            binding.textMessage.setText(chatMessage.message);
             binding.textDateTime.setText(chatMessage.dateTime);
+
         }
     }
+
+//        void setData(ChatMessage chatMessage) {
+//            // Сохраняем оригинальное сообщение
+//            String originalMessage = chatMessage.message;
+//
+//            // Получаем ответ бота
+//            Bot bot = new Bot();
+//            String botResponse = bot.generateResponse(originalMessage);
+//
+//            // Устанавливаем оригинальное сообщение и ответ бота
+//            binding.textMessage.setText(originalMessage + "\n" + botResponse);
+//            binding.textDateTime.setText(chatMessage.dateTime);
+//        }
+//    }
     static class ReceivedMessageViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemContainerReceivedMessageBinding binding;

@@ -66,9 +66,15 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (binding.inputEmail.getText().toString().equals("shamilgaleev@gmail.com")) {
             user.put(Constants.KEY_ROLE, "Администратор");
+            preferenceManager.putString(Constants.KEY_ROLE, "Администратор");
+        }
+        else if (binding.inputEmail.getText().toString().equals("bot@mail.ru")) {
+            user.put(Constants.KEY_ROLE, "BOT");
+            preferenceManager.putString(Constants.KEY_ROLE, "BOT");
         }
         else{
             user.put(Constants.KEY_ROLE, "Пользователь");
+            preferenceManager.putString(Constants.KEY_ROLE, "Пользователь");
         }
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .add(user)

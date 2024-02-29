@@ -121,6 +121,7 @@ public class ChatActivity extends BaseActivity {
 
     }
 
+
     private final EventListener<QuerySnapshot> eventListener = (value, error) -> {
         if(error != null) {
             return;
