@@ -9,28 +9,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.galeev.operator_chat.databinding.ItemContainerReceivedMessageBinding;
 import com.galeev.operator_chat.databinding.ItemContainerSendMessageBinding;
+import com.galeev.operator_chat.models.Bot;
 import com.galeev.operator_chat.models.ChatMessage;
 
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    private final List<ChatMessage> chatMessages;
+    public final List<ChatMessage> chatMessages;
     private Bitmap receiverProfileImage;
-
     public static final int VIEW_TYPE_SEND = 1;
     public static final int VIEW_TYPE_RECEIVED = 2;
-
     public void setReceiverProfileImage(Bitmap bitmap){
         receiverProfileImage = bitmap;
     }
-
     public ChatAdapter(List<ChatMessage> chatMessages, Bitmap receiverProfileImage, String senderId) {
         this.chatMessages = chatMessages;
         this.receiverProfileImage = receiverProfileImage;
         this.senderId = senderId;
     }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -64,7 +60,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemCount() {
         return chatMessages.size();
     }
-
     @Override
     public int getItemViewType(int position) {
         if(chatMessages.get(position).senderId.equals(senderId))
@@ -74,26 +69,26 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return VIEW_TYPE_RECEIVED;
         }
     }
-
     private final String senderId;
-
-
     static class SendMessageViewHolder extends RecyclerView.ViewHolder {
-
         private final ItemContainerSendMessageBinding binding;
-
         SendMessageViewHolder(ItemContainerSendMessageBinding itemContainerSendMessageBinding) {
             super(itemContainerSendMessageBinding.getRoot());
             binding = itemContainerSendMessageBinding;
         }
-
         void setData(ChatMessage chatMessage) {
-            binding.textMessage.setText(chatMessage.message);
-            binding.textDateTime.setText(chatMessage.dateTime);
+            // Сохраняем оригинальное сообщение
+            String originalMessage = chatMessage.message;
 
+            // Получаем ответ бота
+            Bot bot = new Bot();
+            String botResponse = bot.generateResponse(originalMessage);
+
+            // Устанавливаем оригинальное сообщение и ответ бота
+            binding.textMessage.setText(originalMessage + "\n" + botResponse);
+            binding.textDateTime.setText(chatMessage.dateTime);
         }
     }
-
     static class ReceivedMessageViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemContainerReceivedMessageBinding binding;
@@ -102,7 +97,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemContainerReceivedMessageBinding.getRoot());
             binding = itemContainerReceivedMessageBinding;
         }
-
         void setData(ChatMessage chatMessage, Bitmap receivedProfileImage){
             binding.textMessage.setText(chatMessage.message);
             binding.textDateTime.setText(chatMessage.dateTime);

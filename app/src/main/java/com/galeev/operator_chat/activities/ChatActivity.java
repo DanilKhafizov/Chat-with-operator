@@ -54,7 +54,9 @@ public class ChatActivity extends BaseActivity {
     private void init(){
         preferenceManager = new PreferenceManager(getApplicationContext());
         chatMessages = new ArrayList<>();
-        chatAdapter = new ChatAdapter(chatMessages, getBitmapFromEncodedString(receiverUser.image),
+        chatAdapter = new ChatAdapter(
+                chatMessages,
+                getBitmapFromEncodedString(receiverUser.image),
                 preferenceManager.getString(Constants.KEY_USER_ID)
         );
         binding.chatRecyclerView.setAdapter(chatAdapter);

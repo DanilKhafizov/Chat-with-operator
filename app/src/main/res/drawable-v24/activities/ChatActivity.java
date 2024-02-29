@@ -34,7 +34,7 @@ import java.util.Objects;
 public class ChatActivity extends BaseActivity {
     private ActivityChatBinding binding;
     private User receiverUser;
-    private List<ChatMessage> chatMessages;
+    public List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;

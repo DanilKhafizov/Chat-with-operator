@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.galeev.operator_chat.models.Bot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.galeev.operator_chat.adapters.UsersAdapter;
@@ -82,6 +83,8 @@ private void setListeners(){
                     }
                 });
     }
+
+
     private void showErrorMessage(){
         binding.textErrorMessage.setText(String.format("%s", "Нет доступного пользователя"));
         binding.textErrorMessage.setVisibility(View.VISIBLE);
