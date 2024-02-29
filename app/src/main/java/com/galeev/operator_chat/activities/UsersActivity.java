@@ -5,21 +5,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.galeev.operator_chat.models.Bot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.galeev.operator_chat.adapters.UsersAdapter;
 import com.galeev.operator_chat.databinding.ActivityUsersBinding;
 import com.galeev.operator_chat.listeners.UserListener;
 import com.galeev.operator_chat.models.User;
 import com.galeev.operator_chat.utilities.Constants;
 import com.galeev.operator_chat.utilities.PreferenceManager;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UsersActivity extends BaseActivity implements UserListener {
-
     private ActivityUsersBinding binding;
     private PreferenceManager preferenceManager;
     @Override
@@ -42,7 +40,7 @@ private void setListeners(){
                 .addOnCompleteListener(task -> {
                     loading(false);
                     String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
-                    String currentUserRole = preferenceManager.getString(Constants.KEY_ROLE); // Получаем роль текущего пользователя
+                    String currentUserRole = preferenceManager.getString(Constants.KEY_ROLE);
                     if (task.isSuccessful() && task.getResult() != null) {
                         List<User> users = new ArrayList<>();
                         for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
@@ -58,17 +56,13 @@ private void setListeners(){
                             user.token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN);
                             user.id = queryDocumentSnapshot.getId();
                             // Проверяем роль текущего пользователя и добавляем пользователя в список
-                            if ("Администратор".equals(currentUserRole)) {
-                                // Если текущий пользователь администратор, отображаем всех пользователей, кроме текущего
+                            if ("Администратор".equals(currentUserRole) || "BOT".equals(currentUserRole)) {
                                 users.add(user);
-                            } else if ("Администратор".equals(userRole)) {
-                                // Если текущий пользователь не администратор, отображаем только аккаунт администратора
-                                users.clear(); // Очищаем список от других пользователей
-                                users.add(user);
-                                break; // Прерываем цикл после добавления аккаунта администратора
                             } else {
-                                // Если ни текущий пользователь, ни текущий пользователь из списка не администраторы, отображаем всех пользователей
-                                users.add(user);
+                                if ("Администратор".equals(userRole) || "BOT".equals(userRole)) {
+                                    // Если текущий пользователь не администратор или BOT, отображаем только аккаунты администратора и BOT
+                                    users.add(user);
+                                }
                             }
                         }
                         if (users.size() > 0) {
