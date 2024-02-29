@@ -63,6 +63,13 @@ public class SignUpActivity extends AppCompatActivity {
         user.put(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
         user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
         user.put(Constants.KEY_IMAGE, encodedImage);
+
+        if (binding.inputEmail.getText().toString().equals("shamilgaleev@gmail.com")) {
+            user.put(Constants.KEY_ROLE, "Администратор");
+        }
+        else{
+            user.put(Constants.KEY_ROLE, "Пользователь");
+        }
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .add(user)
                 .addOnSuccessListener(documentReference -> {
