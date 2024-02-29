@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">operator_chat</string>
+    <string name="email">Почта</string>
+    <string name="password">Пароль</string>
+    <string name="sign_in">Войти</string>
+    <string name="create_new_account">Создать новый аккаунт</string>
+    <string name="welcome_back">С возвращением!</string>
+    <string name="add_image">Добавить</string>
+    <string name="name">Имя</string>
+    <string name="confirm_password">Подтвердить пароль</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="select_user">Выбрать пользователя</string>
+    <string name="type_a_message">Сообщение</string>
+    <string name="login_to_continue">Войдите, чтобы продолжить</string>
+    <string name="online">Онлайн</string>
+    <string name="select_role">Выберите роль</string>
+    <array name="roles">
+        <item>Клиент</item>
+        <item>Работник</item>
+    </array>
+</resources>

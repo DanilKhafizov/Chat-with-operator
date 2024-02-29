@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1009889580508",
+    "project_id": "operatorchat-9c606",
+    "storage_bucket": "operatorchat-9c606.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009889580508:android:15313a51ac460054ec2b19",
+        "android_client_info": {
+          "package_name": "com.galeev.operator_chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcrNwMDo5HN2WWIso5p0FXhkftvTLH4EM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
