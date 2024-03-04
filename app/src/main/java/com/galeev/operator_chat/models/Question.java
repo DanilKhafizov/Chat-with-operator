@@ -14,7 +14,7 @@ public class Question implements Parcelable {
     // Конструктор и методы получения и установки значений для полей role, timestamp, firstName, lastName, questionTitle и question
 
     // Конструктор для инициализации объекта Question
-    public Question(String role, String timestamp, String firstName, String lastName, String questionTitle, String question) {
+    public Question(String role, String timestamp, String firstName, String questionTitle, String question) {
         this.role = role;
         this.timestamp = timestamp;
         this.firstName = firstName;

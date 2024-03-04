@@ -9,12 +9,17 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.galeev.operator_chat.R;
+import com.galeev.operator_chat.models.Question;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.galeev.operator_chat.databinding.ActivitySignUpBinding;
 import com.galeev.operator_chat.utilities.Constants;
@@ -36,8 +41,14 @@ public class SignUpActivity extends AppCompatActivity {
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.roles, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        binding.inputRole.setAdapter(adapter);
+
         setListeners();
     }
+
     private void setListeners(){
         binding.textSignIn.setOnClickListener(v -> onBackPressed());
         binding.buttonSignUp.setOnClickListener(v -> {
@@ -51,7 +62,6 @@ public class SignUpActivity extends AppCompatActivity {
             pickImage.launch(intent);
         });
     }
-
     private void showToast(String message){
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
@@ -62,19 +72,24 @@ public class SignUpActivity extends AppCompatActivity {
         user.put(Constants.KEY_NAME, binding.inputName.getText().toString());
         user.put(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
         user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
-        user.put(Constants.KEY_IMAGE, encodedImage);
-
+        if(encodedImage == null){
+            Bitmap defaultBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_image);
+            String defaultEncodedImage = encodeImage(defaultBitmap);
+            preferenceManager.putString(Constants.KEY_IMAGE, defaultEncodedImage);
+            user.put(Constants.KEY_IMAGE, defaultEncodedImage);
+        }
+        else{
+            user.put(Constants.KEY_IMAGE, encodedImage);
+            preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
+        }
+        user.put(Constants.KEY_ROLE, binding.inputRole.getSelectedItem().toString());
         if (binding.inputEmail.getText().toString().equals("shamilgaleev@gmail.com")) {
             user.put(Constants.KEY_ROLE, "Администратор");
             preferenceManager.putString(Constants.KEY_ROLE, "Администратор");
         }
-        else if (binding.inputEmail.getText().toString().equals("bot@mail.ru")) {
+        if (binding.inputEmail.getText().toString().equals("bot@mail.ru")) {
             user.put(Constants.KEY_ROLE, "BOT");
             preferenceManager.putString(Constants.KEY_ROLE, "BOT");
-        }
-        else{
-            user.put(Constants.KEY_ROLE, "Пользователь");
-            preferenceManager.putString(Constants.KEY_ROLE, "Пользователь");
         }
         database.collection(Constants.KEY_COLLECTION_USERS)
                 .add(user)
@@ -83,15 +98,28 @@ public class SignUpActivity extends AppCompatActivity {
                     preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                     preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
                     preferenceManager.putString(Constants.KEY_NAME, binding.inputName.getText().toString());
-                    preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    preferenceManager.putString(Constants.KEY_ROLE, binding.inputRole.getSelectedItem().toString());
+                    openCorrectActivity();
                 })
                 .addOnFailureListener(exception -> {
                         loading(false);
                         showToast(exception.getMessage());
                 });
+    }
+
+
+
+    private void openCorrectActivity(){
+        String role1 = preferenceManager.getString(Constants.KEY_ROLE);
+        Intent intent;
+        if(role1.equals("Клиент") || role1.equals("Работник")){
+            intent = new Intent(getApplicationContext(), MainActivity2.class);
+        }
+        else{
+            intent = new Intent(getApplicationContext(), MainActivity2.class);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private String encodeImage(Bitmap bitmap){
@@ -103,7 +131,6 @@ public class SignUpActivity extends AppCompatActivity {
         byte[] bytes = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
-
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -123,10 +150,9 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             }
     );
-
     private Boolean isValidSignUpDetails(){
-        if(encodedImage == null){
-            showToast("Выберите изображение профиля");
+        if(binding.inputRole.getSelectedItem().toString().trim().isEmpty()){
+            showToast("Введите роль");
             return false;
         } else if (binding.inputName.getText().toString().trim().isEmpty()){
             showToast("Введите имя");
@@ -150,7 +176,6 @@ public class SignUpActivity extends AppCompatActivity {
         return true;
         }
     }
-
     private void loading(Boolean isLoading){
         if(isLoading){
             binding.buttonSignUp.setVisibility(View.INVISIBLE);
@@ -161,5 +186,4 @@ public class SignUpActivity extends AppCompatActivity {
             binding.progressBar.setVisibility(View.INVISIBLE);
         }
     }
-
 }

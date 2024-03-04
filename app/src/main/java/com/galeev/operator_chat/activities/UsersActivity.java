@@ -52,6 +52,7 @@ private void setListeners(){
                             User user = new User();
                             user.name = queryDocumentSnapshot.getString(Constants.KEY_NAME);
                             user.email = queryDocumentSnapshot.getString(Constants.KEY_EMAIL);
+                            user.role = queryDocumentSnapshot.getString(Constants.KEY_ROLE);
                             user.image = queryDocumentSnapshot.getString(Constants.KEY_IMAGE);
                             user.token = queryDocumentSnapshot.getString(Constants.KEY_FCM_TOKEN);
                             user.id = queryDocumentSnapshot.getId();
@@ -77,8 +78,6 @@ private void setListeners(){
                     }
                 });
     }
-
-
     private void showErrorMessage(){
         binding.textErrorMessage.setText(String.format("%s", "Нет доступного пользователя"));
         binding.textErrorMessage.setVisibility(View.VISIBLE);

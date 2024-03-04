@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_20sdp"
-            android:text="@string/create_new_account"
+            android:text="@string/sign_up_text"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_18ssp"
             android:textStyle="bold"/>
@@ -46,10 +46,24 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/add_image"
-                android:textColor="@color/secondary_text"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_10ssp"/>
 
         </FrameLayout>
+
+        <Spinner
+            android:id="@+id/inputRole"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:background="@color/secondary_text"
+            android:textColorHint="@color/black"
+            android:textColor="@color/black"
+            android:entries="@array/roles"
+            android:paddingStart="@dimen/_10sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:textSize="@dimen/_13ssp"/>
+
 
         <EditText
             android:id="@+id/inputName"
@@ -59,12 +73,12 @@
             android:background="@drawable/background_input"
             android:hint="@string/name"
             android:imeOptions="actionNext"
-            android:textColorHint="@color/secondary_text"
+            android:textColorHint="@color/black"
             android:importantForAutofill="no"
             android:inputType="text"
             android:paddingStart="@dimen/_16sdp"
             android:paddingEnd="@dimen/_16sdp"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/black"
             android:textSize="@dimen/_13ssp"/>
 
         <EditText
@@ -76,11 +90,11 @@
             android:hint="@string/email"
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
-            android:textColorHint="@color/secondary_text"
+            android:textColorHint="@color/black"
             android:inputType="textEmailAddress"
             android:paddingStart="@dimen/_16sdp"
             android:paddingEnd="@dimen/_16sdp"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/black"
             android:textSize="@dimen/_13ssp"/>
 
         <EditText
@@ -92,11 +106,11 @@
             android:hint="@string/password"
             android:imeOptions="actionNext"
             android:importantForAutofill="no"
-            android:textColorHint="@color/secondary_text"
+            android:textColorHint="@color/black"
             android:inputType="textPassword"
             android:paddingStart="@dimen/_16sdp"
             android:paddingEnd="@dimen/_16sdp"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/black"
             android:textSize="@dimen/_13ssp"/>
 
 
@@ -109,11 +123,11 @@
             android:hint="@string/confirm_password"
             android:imeOptions="actionDone"
             android:importantForAutofill="no"
-            android:textColorHint="@color/secondary_text"
+            android:textColorHint="@color/black"
             android:inputType="textPassword"
             android:paddingStart="@dimen/_16sdp"
             android:paddingEnd="@dimen/_16sdp"
-            android:textColor="@color/primary_text"
+            android:textColor="@color/black"
             android:textSize="@dimen/_13ssp"/>
 
         <FrameLayout
@@ -123,16 +137,16 @@
             android:animateLayoutChanges="true">
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:text="@string/sign_up"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_13ssp"
-            android:textStyle="bold"
-            app:cornerRadius="@dimen/_8sdp"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonSignUp"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                android:text="@string/sign_up"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_13ssp"
+                android:textStyle="bold"
+                app:cornerRadius="@dimen/_8sdp"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"

@@ -18,7 +18,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Bitmap receiverProfileImage;
     public static final int VIEW_TYPE_SEND = 1;
     public static final int VIEW_TYPE_RECEIVED = 2;
+
     public ChatAdapter(List<ChatMessage> chatMessages, Bitmap receiverProfileImage, String senderId) {
+
         this.chatMessages = chatMessages;
         this.receiverProfileImage = receiverProfileImage;
         this.senderId = senderId;
@@ -72,27 +74,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(itemContainerSendMessageBinding.getRoot());
             binding = itemContainerSendMessageBinding;
         }
-
         void setData(ChatMessage chatMessage) {
             binding.textMessage.setText(chatMessage.message);
             binding.textDateTime.setText(chatMessage.dateTime);
 
         }
     }
-
-//        void setData(ChatMessage chatMessage) {
-//            // Сохраняем оригинальное сообщение
-//            String originalMessage = chatMessage.message;
-//
-//            // Получаем ответ бота
-//            Bot bot = new Bot();
-//            String botResponse = bot.generateResponse(originalMessage);
-//
-//            // Устанавливаем оригинальное сообщение и ответ бота
-//            binding.textMessage.setText(originalMessage + "\n" + botResponse);
-//            binding.textDateTime.setText(chatMessage.dateTime);
-//        }
-//    }
     static class ReceivedMessageViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemContainerReceivedMessageBinding binding;

@@ -8,9 +8,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.galeev.operator_chat.databinding.ActivitySignInBinding;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.galeev.operator_chat.databinding.ActivitySignInBinding;
 import com.galeev.operator_chat.utilities.Constants;
 import com.galeev.operator_chat.utilities.PreferenceManager;
 
@@ -24,7 +24,7 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         preferenceManager = new PreferenceManager(getApplicationContext());
         if(preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)){
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
             startActivity(intent);
             finish();
         }
@@ -57,14 +57,25 @@ public class SignInActivity extends AppCompatActivity {
                         preferenceManager.putString(Constants.KEY_NAME, documentSnapshot.getString(Constants.KEY_NAME));
                         preferenceManager.putString(Constants.KEY_IMAGE, documentSnapshot.getString(Constants.KEY_IMAGE));
                         preferenceManager.putString(Constants.KEY_ROLE, documentSnapshot.getString(Constants.KEY_ROLE));
-                        Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+                        openCorrectActivity();
                     } else {
                         loading(false);
                         showToast("Пользователь не найден");
                     }
                 });
+    }
+
+    private void openCorrectActivity(){
+        String role1 = preferenceManager.getString(Constants.KEY_ROLE);
+        Intent intent;
+        if(role1.equals("Клиент") || role1.equals("Работник")){
+            intent = new Intent(getApplicationContext(), MainActivity2.class);
+        }
+        else{
+            intent = new Intent(getApplicationContext(), MainActivity2.class);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void loading(Boolean isLoading){

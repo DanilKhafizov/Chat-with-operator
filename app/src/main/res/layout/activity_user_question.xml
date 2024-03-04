@@ -2,66 +2,58 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:padding="16dp">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
 
         <EditText
-            android:id="@+id/editTextFirstName"
+            android:id="@+id/inputQuestionTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Имя"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:background="@drawable/background_input"
+            android:hint="@string/questionTitle"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:textColorHint="@color/secondary_text"
             android:inputType="text"
-            android:layout_marginBottom="16dp"/>
+            android:paddingStart="@dimen/_16sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_13ssp"/>
 
         <EditText
-            android:id="@+id/editTextLastName"
+            android:id="@+id/inputQuestion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Фамилия"
-            android:inputType="text"
-            android:layout_below="@id/editTextFirstName"
-            android:layout_marginBottom="16dp"/>
-
-        <Spinner
-            android:id="@+id/spinnerRole"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editTextLastName"
-            android:layout_marginBottom="16dp"
-            android:entries="@array/roles"
-            android:prompt="@string/select_role"/>
-
-        <EditText
-            android:id="@+id/editTextQuestionTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Заголовок вопроса"
-            android:inputType="text"
-            android:layout_below="@id/spinnerRole"
-            android:layout_marginBottom="16dp"/>
-
-        <EditText
-            android:id="@+id/editTextQuestion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ваш вопрос"
-            android:gravity="left"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:minHeight="@dimen/_45sdp"
+            android:background="@drawable/background_input"
+            android:hint="@string/question"
+            android:imeOptions="actionNext"
+            android:importantForAutofill="no"
+            android:textColorHint="@color/secondary_text"
             android:inputType="textMultiLine"
-            android:layout_below="@id/editTextQuestionTitle"
-            android:layout_marginBottom="16dp"/>
+            android:paddingStart="@dimen/_16sdp"
+            android:paddingEnd="@dimen/_16sdp"
+            android:textColor="@color/primary_text"
+            android:textSize="@dimen/_13ssp"/>
+
 
         <Button
             android:id="@+id/btnSubmitQuestion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Отправить вопрос"
-            android:layout_below="@id/editTextQuestion"
-            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/send_question_text"
             android:layout_marginBottom="10dp"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </ScrollView>
