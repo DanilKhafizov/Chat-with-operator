@@ -1,10 +1,11 @@
 <resources>
-    <string name="app_name">operator_chat</string>
+    <string name="app_name">Чат с оператором</string>
     <string name="email">Почта</string>
     <string name="password">Пароль</string>
     <string name="sign_in">Войти</string>
-    <string name="create_new_account">Создать новый аккаунт</string>
-    <string name="welcome_back">С возвращением!</string>
+    <string name="sign_in_text">Авторизоваться</string>
+    <string name="create_new_account">Нет аккаунта</string>
+    <string name="autho_text">Авторизация</string>
     <string name="add_image">Добавить</string>
     <string name="name">Имя</string>
     <string name="role">Роль</string>
@@ -14,11 +15,12 @@
     <string name="type_a_message">Сообщение</string>
     <string name="login_to_continue">Войдите, чтобы продолжить</string>
     <string name="online">Онлайн</string>
-    <string name="sign_up_text">Регистрация</string>
+    <string name="sign_up_text">Зарегистрируйтесь</string>
     <string name="select_role">Выберите роль</string>
     <string name="send_question_text">Отправить вопрос</string>
     <string name="questionTitle">Заголовок</string>
     <string name="question">Вопрос</string>
+    <string name="WhoYouAre">Кто вы?</string>
     <array name="roles">
         <item>Клиент</item>
         <item>Работник</item>

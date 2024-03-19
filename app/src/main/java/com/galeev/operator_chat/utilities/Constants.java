@@ -4,7 +4,6 @@ public class Constants {
     public static final String KEY_COLLECTION_USERS = "users";
     public static final String KEY_COLLECTION_QUESTIONS = "questions";
     public static final String KEY_NAME = "name";
-    public static final String KEY_LASTNAME = "lastname";
     public static final String KEY_ROLE = "role";
     public static final String KEY_QUESTION_TITLE = "questionTitle";
     public static final String KEY_QUESTION = "question";

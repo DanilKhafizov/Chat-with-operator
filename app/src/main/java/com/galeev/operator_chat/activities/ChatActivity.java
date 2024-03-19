@@ -1,18 +1,20 @@
 package com.galeev.operator_chat.activities;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.galeev.operator_chat.adapters.UsersAdapter;
+import com.galeev.operator_chat.adapters.ChatAdapter;
+import com.galeev.operator_chat.databinding.ActivityChatBinding;
+import com.galeev.operator_chat.models.ChatMessage;
+import com.galeev.operator_chat.models.User;
+import com.galeev.operator_chat.utilities.Constants;
+import com.galeev.operator_chat.utilities.PreferenceManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
@@ -21,12 +23,6 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.galeev.operator_chat.adapters.ChatAdapter;
-import com.galeev.operator_chat.databinding.ActivityChatBinding;
-import com.galeev.operator_chat.models.ChatMessage;
-import com.galeev.operator_chat.models.User;
-import com.galeev.operator_chat.utilities.Constants;
-import com.galeev.operator_chat.utilities.PreferenceManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +39,6 @@ public class ChatActivity extends BaseActivity {
     private User receiverUser;
     private List<ChatMessage> chatMessages;
     private ChatAdapter chatAdapter;
-    private UsersAdapter usersAdapter;
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
     private String conversionId = null;
@@ -75,13 +70,15 @@ public class ChatActivity extends BaseActivity {
     }
     private void sendMessage(){
 
+
         HashMap<String, Object> message = new HashMap<>();
         message.put(Constants.KEY_SENDER_ID, preferenceManager.getString(Constants.KEY_USER_ID));
         message.put(Constants.KEY_RECEIVER_ID, receiverUser.id);
         message.put(Constants.KEY_MESSAGE, binding.inputMessage.getText().toString());
         message.put(Constants.KEY_TIMESTAMP, new Date());
         database.collection(Constants.KEY_COLLECTION_CHAT).add(message);
-        if(receiverUser.id.equals("8PKEET3cwE3bPciEkeFs"))
+        String senderId = (String) message.get(Constants.KEY_SENDER_ID);
+        if(receiverUser.id.equals("wX0ewhC2Mr0E03bmpZgz"))
         {
             receiverUser.role = "BOT";
         }
@@ -89,63 +86,126 @@ public class ChatActivity extends BaseActivity {
         String userMessage = binding.inputMessage.getText().toString();
         botResponse = "";
         if ("BOT".equals(receiverUser.role)) {
-            if (userMessage.contains("модели двигателей") || userMessage.contains("модели двигатели")) {
-                botResponse = "Российский двигатель";
-                sendMessageToBot(botResponse);
-                botResponse = "Американский двигатель";
-                sendMessageToBot(botResponse);
-                botResponse = "Немецкий двигатель";
-                sendMessageToBot(botResponse);
-            } else if (userMessage.contains("оператор") || userMessage.contains("Оператор")) {
-                botResponse = "Чтобы открыть чат с оператором, отправьте сообщение: 1 ";
-                sendMessageToBot(botResponse);
-                isLastBotMessageOperator = true; // Устанавливаем флаг, что последнее сообщение бота было "Открыть чат с оператором?"
-            } else if (userMessage.equalsIgnoreCase("1") && isLastBotMessageOperator) {
-                getUsersFromDatabase();
-                isLastBotMessageOperator = false;
-            } else if (userMessage.contains("сколько детали") || userMessage.contains("сколько деталей") ||
-                    userMessage.contains("Сколько")) {
-                if (userMessage.contains("су") || userMessage.contains("СУ") || userMessage.contains("Су")) {
-                    if (userMessage.contains("57")) {
-                        botResponse = "Двигатель Су-57 имеет около 500000 деталей";
-                        sendMessageToBot(botResponse);
-                    }
-                    if (userMessage.contains("27")) {
-                        botResponse = "Двигатель Су-27 имеет около 10000 деталей";
-                        sendMessageToBot(botResponse);
-                    }
-                    if (userMessage.contains("30")) {
-                        botResponse = "Двигатель Су-30 имеет около 90000 деталей";
-                        sendMessageToBot(botResponse);
-                    }
-                    if (userMessage.contains("35")) {
-                        botResponse = "Двигатель Су-35 имеет около 350000 деталей";
-                        sendMessageToBot(botResponse);
-                    }
-                    if (userMessage.contains("24")) {
-                        botResponse = "Двигатель Су-24 имеет около 240000 деталей";
-                        sendMessageToBot(botResponse);
-                    }
-                    if (userMessage.contains("25")) {
-                        botResponse = "Двигатель Су-25 имеет около 250000 деталей";
-                        sendMessageToBot(botResponse);
-                    }
-                    if (userMessage.contains("25")) {
-                        botResponse = "Двигатель Су-25 имеет около 150000 деталей";
-                        sendMessageToBot(botResponse);
-                    }
-                    if (userMessage.contains("34")) {
-                        botResponse = "Двигатель Су-34 имеет около 1000000 деталей";
-                        sendMessageToBot(botResponse);
-                    }
-                }
-            } else {
-                botResponse = "Извините, не могу распознать ваш запрос.";
-                sendMessageToBot(botResponse);
-            }
+            assert senderId != null;
+            database.collection("users").document(senderId)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String userRole = documentSnapshot.getString("role");
+                            if (Objects.equals(userRole, "Клиент")) {
+                                if (userMessage.contains("модели двигателей") || userMessage.contains("модели двигатели")) {
+                                    botResponse = "Российский двигатель";
+                                    sendMessageToBot(botResponse);
+                                    botResponse = "Американский двигатель";
+                                    sendMessageToBot(botResponse);
+                                    botResponse = "Немецкий двигатель";
+                                    sendMessageToBot(botResponse);
+                                } else if (userMessage.contains("оператор") || userMessage.contains("Оператор")) {
+                                    botResponse = "Чтобы открыть чат с оператором, отправьте сообщение: 1 ";
+                                    sendMessageToBot(botResponse);
+                                    isLastBotMessageOperator = true;
+                                } else if (userMessage.equalsIgnoreCase("1") && isLastBotMessageOperator) {
+                                    getUsersFromDatabase();
+                                    isLastBotMessageOperator = false;
+                                } else if (userMessage.contains("сколько детали") || userMessage.contains("сколько деталей")
+                                        || userMessage.contains("Сколько деталей")){
+                                    if (userMessage.contains("су") || userMessage.contains("СУ") || userMessage.contains("Су")) {
+                                        if (userMessage.contains("57")) {
+                                            botResponse = "Двигатель Су-57 имеет около 500000 деталей";
+                                            sendMessageToBot(botResponse);
+                                        }
+                                        if (userMessage.contains("27")) {
+                                            botResponse = "Двигатель Су-27 имеет около 10000 деталей";
+                                            sendMessageToBot(botResponse);
+                                        }
+                                        if (userMessage.contains("30")) {
+                                            botResponse = "Двигатель Су-30 имеет около 90000 деталей";
+                                            sendMessageToBot(botResponse);
+                                        }
+                                        if (userMessage.contains("35")) {
+                                            botResponse = "Двигатель Су-35 имеет около 350000 деталей";
+                                            sendMessageToBot(botResponse);
+                                        }
+                                        if (userMessage.contains("24")) {
+                                            botResponse = "Двигатель Су-24 имеет около 240000 деталей";
+                                            sendMessageToBot(botResponse);
+                                        }
+                                        if (userMessage.contains("25")) {
+                                            botResponse = "Двигатель Су-25 имеет около 250000 деталей";
+                                            sendMessageToBot(botResponse);
+                                        }
+                                        if (userMessage.contains("25")) {
+                                            botResponse = "Двигатель Су-25 имеет около 150000 деталей";
+                                            sendMessageToBot(botResponse);
+                                        }
+                                        if (userMessage.contains("34")) {
+                                            botResponse = "Двигатель Су-34 имеет около 1000000 деталей";
+                                            sendMessageToBot(botResponse);
+                                        }
+                                    }
+                                } else if (userMessage.contains("брак") || userMessage.contains("дефект") || userMessage.contains("неисправность") ||
+                                userMessage.contains("повреждение")) {
+                                        botResponse = "Вы можете обратиться в ЦЕХ, где Вы покупали данный товар";
+                                        sendMessageToBot(botResponse);
+                                    }
+                                else if (userMessage.contains("чертеж")) {
+                                    if (userMessage.contains("двигател") || userMessage.contains("Двигател")){
+                                        botResponse = "Для запроса двигателя по чертежу Вам нужно обратиться в ЦЕХ 37";
+                                        sendMessageToBot(botResponse);
+                                    }
+                                }
+                                else if (userMessage.contains("сын") || userMessage.contains("ребенок") ||
+                                        userMessage.contains("доч") || userMessage.contains("ученик")) {
+                                        botResponse = "С таким вопросом обратитесь в отдел кадров, где он(а) станет учеником ПУЦ после обучения" +
+                                                "сможет работать у нас со своей профессии";
+                                        sendMessageToBot(botResponse);
+                                }
+
+                                else {
+                                    botResponse = "Извините, не могу распознать ваш вопрос";
+                                    sendMessageToBot(botResponse);
+                                }
+                            }
+                            if(Objects.equals(userRole, "Работник")) {
+                                if (userMessage.contains("хотел") || userMessage.contains("хочу") || userMessage.contains("Хотел")
+                                        || userMessage.contains("Хочу")) {
+                                    if (userMessage.contains("устроиться на работу")) {
+                                        botResponse = "Можете обратиться в отдел кадров с дальнейшими вопросами по номеру; " +
+                                                "211-39-39, доб. 34-059\n";
+                                        sendMessageToBot(botResponse);
+                                    }
+                                } else if (userMessage.contains("не выдали зарплату") || userMessage.contains("не выдали деньги") ||
+                                        userMessage.contains("не заплатили")) {
+                                    botResponse = "С данным вопросам подойдите в 103 кабинет бтз";
+                                    sendMessageToBot(botResponse);
+                                } else if (userMessage.contains("деталь с браком") || userMessage.contains("брак") ||
+                                        userMessage.contains("попался брак") ||
+                                        userMessage.contains("дефект")||
+                                        userMessage.contains("неисправность")) {
+                                    botResponse = "Деталь с браком можно отнести к контролеру";
+                                    sendMessageToBot(botResponse);
+                                }
+                                else if (userMessage.contains("оператор") || userMessage.contains("Оператор")) {
+                                    botResponse = "Чтобы открыть чат с оператором, отправьте сообщение: 1 ";
+                                    sendMessageToBot(botResponse);
+                                    isLastBotMessageOperator = true;
+                                }
+                             else if (userMessage.equalsIgnoreCase("1") && isLastBotMessageOperator) {
+                                getUsersFromDatabase();
+                                isLastBotMessageOperator = false;
+                            }
+                                else {
+                                    botResponse = "Извините, не могу распознать ваш вопрос";
+                                    sendMessageToBot(botResponse);
+                                }
+                            }
+                        }
+                        else {
+                            showToast("Не удалось найти роль пользователя");
+                        }
+                    })
+                    .addOnFailureListener(e -> showToast(e.getMessage()));
         }
-
-
 
         if(conversionId != null){
             updateConversion(binding.inputMessage.getText().toString());
@@ -191,16 +251,6 @@ public class ChatActivity extends BaseActivity {
     }
 
 
-    private User getUserByRole(String role) {
-        List<User> users = new ArrayList<>(); // Создаем список пользователей
-        // Проходим по всем пользователям, полученным из базы данных
-        for (User user : users) {
-            if (role.equals(user.role)) {
-                return user; // Возвращаем пользователя с указанной ролью
-            }
-        }
-        return null; // Если пользователь с указанной ролью не найден
-    }
 
     private void sendMessageToBot(String botResponse) {
         HashMap<String, Object> botMessage = new HashMap<>();
@@ -220,6 +270,7 @@ public class ChatActivity extends BaseActivity {
             startActivity(intent);
             finish();
         } else {
+            showToast("Не удается открыть чат с оператором");
         }
     }
 
@@ -374,7 +425,7 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(ChatActivity.this, MainActivity.class);
+        Intent intent = new Intent(ChatActivity.this, MainChatActivity.class);
         startActivity(intent);
         finish();
         super.onBackPressed();

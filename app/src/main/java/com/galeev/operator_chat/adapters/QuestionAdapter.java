@@ -20,8 +20,8 @@ import java.util.List;
 
 public class QuestionAdapter extends ArrayAdapter<Question>  {
 
-    private Context mContext;
-    private List<Question> mQuestions;
+    private final Context mContext;
+    private final List<Question> mQuestions;
 
     public QuestionAdapter(Context context, List<Question> questions) {
         super(context, 0, questions);

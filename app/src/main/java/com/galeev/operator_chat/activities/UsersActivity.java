@@ -3,7 +3,6 @@ package com.galeev.operator_chat.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import com.galeev.operator_chat.adapters.UsersAdapter;
 import com.galeev.operator_chat.databinding.ActivityUsersBinding;
@@ -90,9 +89,6 @@ private void setListeners(){
         }
     }
 
-    private void showToast(String message){
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
     @Override
     public void onUserClicked(User user) {
         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);

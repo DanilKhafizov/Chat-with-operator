@@ -24,7 +24,7 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         preferenceManager = new PreferenceManager(getApplicationContext());
         if(preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)){
-            Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             finish();
         }
@@ -69,10 +69,10 @@ public class SignInActivity extends AppCompatActivity {
         String role1 = preferenceManager.getString(Constants.KEY_ROLE);
         Intent intent;
         if(role1.equals("Клиент") || role1.equals("Работник")){
-            intent = new Intent(getApplicationContext(), MainActivity2.class);
+            intent = new Intent(getApplicationContext(), MainActivity.class);
         }
         else{
-            intent = new Intent(getApplicationContext(), MainActivity2.class);
+            intent = new Intent(getApplicationContext(), MainActivity.class);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

@@ -7,7 +7,7 @@ public class ChatMessage {
     public Date dateObject;
     public String conversionId, conversionName, conversionImage;
     private String messageText;
-    private String messageType; // "user" или "bot"
+    private String messageType;
 
 public ChatMessage(){}
 

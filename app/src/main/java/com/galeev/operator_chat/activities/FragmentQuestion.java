@@ -5,29 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 
 import com.galeev.operator_chat.R;
-import com.galeev.operator_chat.adapters.RecentConversationsAdapter;
-import com.galeev.operator_chat.databinding.ActivityQuestionsBinding;
-import com.galeev.operator_chat.models.ChatMessage;
-import com.galeev.operator_chat.utilities.PreferenceManager;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.List;
 
 
 public class FragmentQuestion extends Fragment  {
-
-    private ActivityQuestionsBinding binding;
-    private PreferenceManager preferenceManager;
-    private List<ChatMessage> conversations;
-    private RecentConversationsAdapter conversationAdapter;
-    private FirebaseFirestore database;
 
     public FragmentQuestion() {
     }

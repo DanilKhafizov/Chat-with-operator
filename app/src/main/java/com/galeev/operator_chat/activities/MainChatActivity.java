@@ -1,4 +1,4 @@
-package com.linar.chatapp.activities;
+package com.galeev.operator_chat.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,6 +8,13 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Toast;
 
+import com.galeev.operator_chat.adapters.RecentConversationsAdapter;
+import com.galeev.operator_chat.databinding.ActivityMainChatBinding;
+import com.galeev.operator_chat.listeners.ConversionListener;
+import com.galeev.operator_chat.models.ChatMessage;
+import com.galeev.operator_chat.models.User;
+import com.galeev.operator_chat.utilities.Constants;
+import com.galeev.operator_chat.utilities.PreferenceManager;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
@@ -15,22 +22,15 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.linar.chatapp.adapters.RecentConversationsAdapter;
-import com.linar.chatapp.databinding.ActivityMainBinding;
-import com.linar.chatapp.listeners.ConversionListener;
-import com.linar.chatapp.models.ChatMessage;
-import com.linar.chatapp.models.User;
-import com.linar.chatapp.utilities.Constants;
-import com.linar.chatapp.utilities.PreferenceManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements ConversionListener {
+public class MainChatActivity extends BaseActivity implements ConversionListener {
 
-    private ActivityMainBinding binding;
+    private ActivityMainChatBinding binding;
     private PreferenceManager preferenceManager;
     private List<ChatMessage> conversations;
     private RecentConversationsAdapter conversationAdapter;
@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity implements ConversionListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainChatBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
         init();
@@ -46,6 +46,7 @@ public class MainActivity extends BaseActivity implements ConversionListener {
         getToken();
         setListeners();
         listenConversations();
+        binding.createQuestion.setOnClickListener(v -> startActivity(new Intent(MainChatActivity.this, UserQuestionActivity.class)));
     }
 
     private void init(){
@@ -164,5 +165,13 @@ public class MainActivity extends BaseActivity implements ConversionListener {
         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(MainChatActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+        super.onBackPressed();
     }
 }

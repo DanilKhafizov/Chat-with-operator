@@ -10,8 +10,6 @@ import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,16 +17,16 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.galeev.operator_chat.R;
-import com.galeev.operator_chat.models.Question;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.galeev.operator_chat.databinding.ActivitySignUpBinding;
 import com.galeev.operator_chat.utilities.Constants;
 import com.galeev.operator_chat.utilities.PreferenceManager;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -42,13 +40,11 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.roles, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.array.roles, R.layout.spinner_item_layout);
+        adapter.setDropDownViewResource(R.layout.dropdown_item_layout);
         binding.inputRole.setAdapter(adapter);
-
         setListeners();
     }
-
     private void setListeners(){
         binding.textSignIn.setOnClickListener(v -> onBackPressed());
         binding.buttonSignUp.setOnClickListener(v -> {
@@ -68,55 +64,68 @@ public class SignUpActivity extends AppCompatActivity {
     private void signUp(){
         loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        HashMap<String, Object> user = new HashMap<>();
-        user.put(Constants.KEY_NAME, binding.inputName.getText().toString());
-        user.put(Constants.KEY_EMAIL, binding.inputEmail.getText().toString());
-        user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
-        if(encodedImage == null){
-            Bitmap defaultBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_image);
-            String defaultEncodedImage = encodeImage(defaultBitmap);
-            preferenceManager.putString(Constants.KEY_IMAGE, defaultEncodedImage);
-            user.put(Constants.KEY_IMAGE, defaultEncodedImage);
-        }
-        else{
-            user.put(Constants.KEY_IMAGE, encodedImage);
-            preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
-        }
-        user.put(Constants.KEY_ROLE, binding.inputRole.getSelectedItem().toString());
-        if (binding.inputEmail.getText().toString().equals("shamilgaleev@gmail.com")) {
-            user.put(Constants.KEY_ROLE, "Администратор");
-            preferenceManager.putString(Constants.KEY_ROLE, "Администратор");
-        }
-        if (binding.inputEmail.getText().toString().equals("bot@mail.ru")) {
-            user.put(Constants.KEY_ROLE, "BOT");
-            preferenceManager.putString(Constants.KEY_ROLE, "BOT");
-        }
+        final String userEmail = binding.inputEmail.getText().toString();
         database.collection(Constants.KEY_COLLECTION_USERS)
-                .add(user)
-                .addOnSuccessListener(documentReference -> {
-                    loading(false);
-                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-                    preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
-                    preferenceManager.putString(Constants.KEY_NAME, binding.inputName.getText().toString());
-                    preferenceManager.putString(Constants.KEY_ROLE, binding.inputRole.getSelectedItem().toString());
-                    openCorrectActivity();
-                })
-                .addOnFailureListener(exception -> {
+                .whereEqualTo(Constants.KEY_EMAIL, userEmail)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().isEmpty()) {
+                            HashMap<String, Object> user = new HashMap<>();
+                            user.put(Constants.KEY_NAME, binding.inputName.getText().toString());
+                            user.put(Constants.KEY_EMAIL, userEmail);
+                            user.put(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString());
+                            if(encodedImage == null){
+                                Bitmap defaultBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_image);
+                                String defaultEncodedImage = encodeImage(defaultBitmap);
+                                preferenceManager.putString(Constants.KEY_IMAGE, defaultEncodedImage);
+                                user.put(Constants.KEY_IMAGE, defaultEncodedImage);
+                            }
+                            else{
+                                user.put(Constants.KEY_IMAGE, encodedImage);
+                                preferenceManager.putString(Constants.KEY_IMAGE, encodedImage);
+                            }
+                            user.put(Constants.KEY_ROLE, binding.inputRole.getSelectedItem().toString());
+                            if (userEmail.equals("shamilgaleev@gmail.com")) {
+                                user.put(Constants.KEY_ROLE, "Администратор");
+                                preferenceManager.putString(Constants.KEY_ROLE, "Администратор");
+                            }
+                            if (userEmail.equals("bot@mail.ru")) {
+                                user.put(Constants.KEY_ROLE, "BOT");
+                                preferenceManager.putString(Constants.KEY_ROLE, "BOT");
+                            }
+                            database.collection(Constants.KEY_COLLECTION_USERS)
+                                    .add(user)
+                                    .addOnSuccessListener(documentReference -> {
+                                        loading(false);
+                                        preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                                        preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
+                                        preferenceManager.putString(Constants.KEY_NAME, binding.inputName.getText().toString());
+                                        preferenceManager.putString(Constants.KEY_ROLE, binding.inputRole.getSelectedItem().toString());
+                                        openCorrectActivity();
+                                    })
+                                    .addOnFailureListener(exception -> {
+                                        loading(false);
+                                        showToast(exception.getMessage());
+                                    });
+                        } else {
+                            loading(false);
+                            showToast("Пользователь с такой почтой уже зарегистрирован.");
+                        }
+                    } else {
                         loading(false);
-                        showToast(exception.getMessage());
+                        showToast("Ошибка: " + Objects.requireNonNull(task.getException()).getMessage());
+                    }
                 });
     }
-
-
-
     private void openCorrectActivity(){
         String role1 = preferenceManager.getString(Constants.KEY_ROLE);
         Intent intent;
         if(role1.equals("Клиент") || role1.equals("Работник")){
-            intent = new Intent(getApplicationContext(), MainActivity2.class);
+            intent = new Intent(getApplicationContext(), MainActivity.class);
         }
         else{
-            intent = new Intent(getApplicationContext(), MainActivity2.class);
+            intent = new Intent(getApplicationContext(), MainActivity.class);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -141,8 +150,8 @@ public class SignUpActivity extends AppCompatActivity {
                             InputStream inputStream = getContentResolver().openInputStream(imageUri);
                             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                             binding.imageProfile.setImageBitmap(bitmap);
-                            binding.textAddImage.setVisibility(View.GONE);
                             encodedImage = encodeImage(bitmap);
+                            binding.imageDefault.setVisibility(View.INVISIBLE);
                         } catch (FileNotFoundException e){
                             e.printStackTrace();
                         }

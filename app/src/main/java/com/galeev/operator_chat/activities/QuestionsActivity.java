@@ -1,16 +1,13 @@
 package com.galeev.operator_chat.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.galeev.operator_chat.R;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.galeev.operator_chat.adapters.QuestionAdapter;
 import com.galeev.operator_chat.databinding.ActivityQuestionsBinding;
-import com.galeev.operator_chat.databinding.ActivityUsersBinding;
 import com.galeev.operator_chat.models.Question;
 import com.galeev.operator_chat.utilities.Constants;
 import com.galeev.operator_chat.utilities.PreferenceManager;
@@ -56,7 +53,7 @@ public class QuestionsActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(QuestionsActivity.this, MainActivity2.class);
+        Intent intent = new Intent(QuestionsActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
         super.onBackPressed();

@@ -21,20 +21,17 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_40sdp"
-        android:text="@string/welcome_back"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:text="@string/autho_text"
         android:textColor="@color/primary_text"
         android:textSize="@dimen/_18ssp"
         android:textStyle="bold"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:text="@string/login_to_continue"
-            android:textColor="@color/secondary_text"
-            android:textSize="@dimen/_12ssp"
-            android:textStyle="bold"/>
+            android:layout_marginTop="@dimen/_40sdp"
+            android:src="@drawable/ympo_logo"/>
         
         <EditText
             android:id="@+id/inputEmail"
@@ -79,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:textAllCaps="false"
                 android:layout_height="@dimen/_50sdp"
-                android:text="@string/sign_in"
+                android:text="@string/sign_in_text"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_13ssp"
                 android:textStyle="bold"
@@ -100,7 +97,7 @@
             android:id="@+id/textCreateNewAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_15sdp"
             android:text="@string/create_new_account"
             android:textColor="@color/primary"
             android:textSize="@dimen/_13ssp"
